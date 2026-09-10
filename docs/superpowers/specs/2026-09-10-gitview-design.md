@@ -55,11 +55,19 @@ Tier one is definitive only in the positive direction. Tier two exists because t
 ```
 skills/gitview/
   SKILL.md
-  scripts/gitview.py
+  scripts/gitrepo.py     every git subprocess call
+  scripts/landed.py      the two-tier finished-branch engine
+  scripts/forge.py       pull request lookup
+  scripts/table.py       ordering and rendering
+  scripts/gitview.py     CLI, wiring, --verify
+  tests/fixture.py       a repository exercising every case
+  tests/test_*.py        one module per script module
   references/safe-to-delete.md
 ```
 
-`gitview.py` is one file, because it is one pass over one repository and splitting it would add indirection without adding a seam worth testing.
+**Amended during implementation, 2026-09-10.** This section first specified a single file. It is five, because the finished-branch engine, the forge lookup and the rendering are each a seam worth testing on its own, and the engine in particular needs a fixture repository built around it.
+
+**The script is read only.** It never deletes, pushes, merges or checks an existing branch out. The actions below are driven from `SKILL.md` instead, so nothing destructive sits in a script that could be run unattended.
 
 `references/safe-to-delete.md` records why the naive tests fail, so the check is not "simplified" back into a broken one later.
 
