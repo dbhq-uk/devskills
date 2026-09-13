@@ -1,4 +1,18 @@
+<div align="center">
+
 # devskills
+
+**Two jobs a developer does mid-task, in the conversation they are already having**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blueviolet)](https://code.claude.com/docs/en/plugins)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20WSL-lightgrey)]()
+
+A free, open-source tool by [DBHQ](https://dbhq.uk)
+
+</div>
+
+---
 
 Development skills for Claude Code and Codex.
 
@@ -11,13 +25,31 @@ Development skills for Claude Code and Codex.
 
 ## Install
 
+### Any agent (Claude Code, Codex, Cursor, Copilot, Windsurf, Gemini, Cline and more)
+
 ```bash
-./install.sh
+npx skills add dbhq-uk/devskills
 ```
 
-It symlinks every directory under `skills/` into `~/.claude/skills/`, so an edit to a script or to a `SKILL.md` is live with no reinstall. Re-run it when a skill is added. It then points you at any skill that still needs credentials.
+The [skills.sh](https://skills.sh) CLI installs into whichever agent directories it finds.
 
-`jira` requires `jq` and `curl`. `gitview` requires Python 3.
+### Local install (Claude Code or Codex)
+
+```bash
+git clone https://github.com/dbhq-uk/devskills.git
+cd devskills
+./install.sh          # Claude Code: symlinks into ~/.claude/skills (edits are live)
+./install-codex.sh    # Codex: installs into ~/.codex/skills
+```
+
+[`install.sh`](install.sh) and [`install-codex.sh`](install-codex.sh) are the same install two ways: Claude Code substitutes `${CLAUDE_SKILL_DIR}`, so the whole skill directory is symlinked untouched, while Codex does not, so its `SKILL.md` is rewritten at install time. Re-run the Codex one after editing a `SKILL.md`.
+
+Both install every skill in the pack, warn rather than fail on a missing dependency and name the skill that needs it, then print the setup command for any skill that needs credentials. Neither runs that setup for you: launching one member's interactive prompt on install of the whole pack is surprising.
+
+### Requirements
+
+- **`gitview`:** Python 3 and `git`. Optionally `gh` or the Azure CLI, for the pull request column
+- **`jira`:** `jq`, `curl`, and a Jira Cloud account you can create an API token on
 
 ## gitview
 

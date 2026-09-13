@@ -1,0 +1,72 @@
+#!/bin/bash
+# Install every skill in this pack into ~/.codex/skills/ for Codex.
+#
+# Codex does not substitute ${CLAUDE_SKILL_DIR}, so this script rewrites that
+# variable to each skill's installed Codex path and symlinks the supporting
+# directories (edits to those stay live). Re-run after editing a SKILL.md.
+#
+# Neither skill in this pack needs a venv: gitview is Python standard library
+# and shells out to git, and jira is bash calling curl. So there is no build
+# step here, unlike the org's Python skills that carry one.
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILLS_ROOT="$HOME/.codex/skills"
+
+echo "=== devskills installer (Codex) ==="
+echo
+
+# --- Dependencies ---
+# A warning, not a failure: each skill needs its own subset, so a missing tool
+# blocks that one skill rather than the install.
+MISSING=""
+command -v jq >/dev/null 2>&1      || MISSING="$MISSING jq(jira)"
+command -v curl >/dev/null 2>&1    || MISSING="$MISSING curl(jira)"
+command -v python3 >/dev/null 2>&1 || MISSING="$MISSING python3(gitview)"
+command -v git >/dev/null 2>&1     || MISSING="$MISSING git(gitview)"
+if [ -n "$MISSING" ]; then
+  echo "Missing, with the skill that needs it:$MISSING"
+  echo "The rest of the pack still installs."
+else
+  echo "Dependencies OK."
+fi
+echo
+
+mkdir -p "$SKILLS_ROOT"
+for src in "$SCRIPT_DIR"/skills/*/; do
+  src="${src%/}"
+  name="$(basename "$src")"
+  target="$SKILLS_ROOT/$name"
+  echo "Installing '$name' -> $target"
+  mkdir -p "$target"
+  # Clear what a previous install left before linking what this one needs.
+  # Without this, an entry since renamed or deleted upstream survives as a
+  # symlink to a path that no longer exists - and a dangling link fails more
+  # confusingly than a missing file, because it looks installed. Only symlinks
+  # are removed, so a real SKILL.md is never at risk.
+  find "$target" -mindepth 1 -maxdepth 1 -type l -exec rm -f {} +
+  for sub in references scripts; do
+    [ -d "$src/$sub" ] && ln -sfn "$src/$sub" "$target/$sub"
+  done
+  chmod +x "$src"/scripts/*.sh 2>/dev/null || true
+  sed "s#\${CLAUDE_SKILL_DIR}#$target#g; s#\$CLAUDE_SKILL_DIR#$target#g" "$src/SKILL.md" > "$target/SKILL.md"
+done
+
+echo
+echo "Installed for Codex. Re-run after editing a SKILL.md - that file is
+rewritten at install time rather than symlinked, so its edits are not live."
+
+# --- Setup scripts, if any skill has one ---
+SETUPS="$(find "$SCRIPT_DIR"/skills -type f -name '*-setup.sh' | sort)"
+if [ -n "$SETUPS" ]; then
+  echo
+  echo "These skills need credentials before first use:"
+  while IFS= read -r setup; do
+    name="$(basename "$(dirname "$(dirname "$setup")")")"
+    echo "  $name:  $SKILLS_ROOT/$name/scripts/$(basename "$setup")"
+  done <<< "$SETUPS"
+fi
+
+echo
+echo "Done. Try: 'survey the branches in this repo' or 'what Jira projects can I see'"
