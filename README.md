@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/logo.svg" alt="devskills - development skills for Claude Code, by DBHQ" width="420">
+
 # devskills
 
 **Two jobs a developer does mid-task, in the conversation they are already having**
