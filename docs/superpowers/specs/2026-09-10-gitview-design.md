@@ -13,10 +13,10 @@ Git answers none of them well on its own. `git branch -vv` shows ahead and behin
 | Worktree | Branch | PR | Ahead | Behind | Unpushed | Safe to delete |
 |---|---|---|---|---|---|---|
 | `app` | `feature/import` | 118 succeeded | 3 | 0 | 0 | no, 46 insertions |
-| `app-fix` | `fix/parser` | – | 18 | 1 | 0 | no, 2,232 insertions |
+| `app-fix` | `fix/parser` | - | 18 | 1 | 0 | no, 2,232 insertions |
 | `spike` | `spike/cache` | 121 conflicts | 11 | 1 | 1 | no, conflicts |
-| – | `main` | – | 0 | 0 | 0 | no, trunk |
-| – | `docs/old-notes` | – | 15 | 1 | 0 | **YES** |
+| - | `main` | - | 0 | 0 | 0 | no, trunk |
+| - | `docs/old-notes` | - | 15 | 1 | 0 | **YES** |
 
 One row per local branch. Rows with a worktree sort first, then the rest under a dash. Worktree-less branches are kept deliberately: that is where finished branches hide.
 
