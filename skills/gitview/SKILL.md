@@ -1,6 +1,6 @@
 ---
 name: gitview
-description: Survey every branch and worktree in a git repository - what is in flight, what is unpushed, and which branches are finished and safe to delete - then optionally clear them away. Trigger on phrases like "gitview", "where are we at with branches", "what branches can I delete", "branch status", "worktree status", "any old branches to tidy up", "what is safe to delete", "show me the branches", "which worktree is on what branch".
+description: Survey every branch and worktree in a git repository - what is in flight, what is unpushed, and which branches are finished and safe to delete - then optionally clear them away. Use when the user asks about branch or worktree status, which branches are safe to delete, or says "gitview".
 ---
 
 # gitview - the state of every branch and worktree
